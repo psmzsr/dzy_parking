@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="../js/jquery3.js"></script>
+</head>
+<body>
+<div class="content" align="center">
+<form action="add_userinfo" method="get">
+    <table border="1px">
+        <tr>
+            <td align="center">用户名:</td>
+            <td align="center"><input type="text" name="user_name" id="user_name"></td>
+        </tr>
+        <tr>
+            <td align="center">手机号:</td>
+            <td align="center"><input name="phone" type="text" placeholder="手机号" id="phone"></td>
+        </tr>
+        <tr>
+            <td align="center">密码:</td>
+            <td align="center"><input name="password" type="password" placeholder="请输入密码" id="password"></td>
+        </tr>
+        <tr>
+            <td align="center">再次确认密码:</td>
+            <td align="center"><input name="again_password" type="password" placeholder="请再次输入密码" id="again_password"></td>
+        </tr>
+        <tr>
+            <td align="center" colspan="2">
+                <input type="submit" value="注册">
+            </td>
+        </tr>
+        <tr>
+            <td align="center" colspan="2">
+                <a th:href="@{user_login}">返回登陆</a>
+            </td>
+        </tr>
+    </table>
+    <font color="red" th:if="${password_error}!=null"><h6>两次密码不一致,请重新填写</h6></font>
+    <font color="red" th:if="${phone_error}!=null"><h6>手机号已被注册，请重新填写！</h6></font>
+</form>
+</div>
+</body>
+</html>

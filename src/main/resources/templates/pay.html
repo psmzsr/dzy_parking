@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+</head>
+<body>
+<form action="pay_caozuo" method="post" align="center">
+    <table align="center">
+    <tr>
+        <td>缴费手机号:</td>
+        <td><input readonly name="phone" th:value="${phone}"><input hidden name="id" th:value="${id}">
+            <input hidden name="password" th:value="${password}"><input hidden name="pay_flag" th:value="${pay_flag}"></td>
+
+    </tr>
+
+    <tr>
+        <td>车牌号:</td>
+        <td><input readonly name="car_number" th:value="${car_number}"></td>
+    </tr>
+    <tr>
+        <td th:if="${pay_flag}==0">缴费金额:</td>
+        <td th:if="${pay_flag}==3">缴费超时金额:</td>
+        <td><input name="pay_money" readonly th:if="${pay_flag}==0" th:value="${pay_money}">
+            <input name="pay_money" readonly th:if="${pay_flag}==3" th:value="${pay_money}"></td>
+    </tr>
+        <tr>
+            <td>本次订单可获得积分：</td>
+            <td><input readonly name="point" th:value="${point} "></td>
+        </tr>
+        <tr>
+            <td colspan="2" th:if="${couldUsePoint}!=null">您当前拥有<span th:text="${user_point}"></span>积分,是否选择使用积分付款<input type="checkbox" value="1" name="pay_point" th:if="${couldUsePoint}!=null">
+            <td colspan="2" th:if="${couldUsePoint}==null">您当前所持积分不足以支付本次账单
+            </td>
+
+        </tr>
+    <tr>
+        <td colspan="2"><button>确认支付</button></td>
+    </tr>
+    </table>
+</form>
+</body>
+</html>

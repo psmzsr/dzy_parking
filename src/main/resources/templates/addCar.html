@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body><div align="center">
+<div>添加车牌</div>
+<form action="addCar" method="post">
+    车牌：
+    <select name="city">
+        <option th:each="city: ${numberPrefixInfoList}" th:if="${city.no == 1}" th:value="${city.area}" th:text="${city.area}"></option>
+    </select>
+    <select name="area">
+        <option th:each="area: ${numberPrefixInfoList}" th:if="${area.no == 2}" th:value="${area.area}" th:text="${area.area}"></option>
+    </select>
+    <span style="margin-left: 5px;font-weight: bold">·</span>
+    <input type="text" name="number" minlength="5" maxlength="5">
+    <input type="hidden" name="phone" th:value="${phone}">
+    <input type="hidden" name="password" th:value="${password}">
+    <input type="hidden" name="level" th:value="${level}">
+    <p><button>确认</button></p>
+</form>
+</div>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
+    <script type="text/javascript">
+        function shoufeiguize()
+        {
+            alert("停车30分钟内免费，超过30分钟开始计费(免费停车时间计入收费时间)\n" +
+                "具体价格为：\n" +
+                "5元/半小时，每50积分可抵抵5元停车费")
+        }
+    </script>
+    <style>
+        html,body {
+            height: 100%;
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+        .shoufeiguize{
+            cursor: pointer;
+        }
+        table {
+
+            width: 90%;
+
+            background: #ccc;
+
+            margin: 10px auto;
+
+            border-collapse: collapse;
+
+            /*border-collapse:collapse合并内外边距
+
+            (去除表格单元格默认的2个像素内外边距*/
+
+        }
+
+        th,td {
+
+            height: 25px;
+
+            line-height: 25px;
+
+            text-align: center;
+
+            border: 1px solid #ccc;
+
+        }
+
+        th {
+
+            background: #eee;
+
+            font-weight: normal;
+
+        }
+
+        tr {
+
+            background: #fff;
+
+        }
+
+        tr:hover {
+
+            background: #cc0;
+
+        }
+
+        td a {
+
+            color: #06f;
+
+            text-decoration: none;
+
+        }
+
+        td a:hover {
+
+            color: #06f;
+
+            text-decoration: underline;
+
+        }
+    </style>
+</head>
+<body>
+<input type="hidden" value="${current_page}" name="current_page">
+<div class="top" style="background: aqua;height: 5%;width: 100%">
+     <ul>
+             <li><label th:text="${user_Info.user_name}"></label> 欢迎回来!</li>
+             <li th:if="${user_Info.level}==0">您现在是：<font color="red">普通会员</font></li>
+             <li th:if="${user_Info.level}==1">您现在是：<font color="red">金卡会员</font></li>
+             <li th:if="${user_Info.level}==2">您是：<font color="red">管理员</font></li>
+             <li align="center">当前可用积分:<label th:text="${user_Info.point}"></label></li>
+             <li align="center">当前月卡额度:<label th:text="${user_Info.month_card}"></label></li>
+             <li class="shoufeiguize" onclick="shoufeiguize()">收费规则</li>
+            <li><a th:href="@{jump_pay_other(phone=${user_Info.phone},password=${user_Info.password})}">代人缴费</a></li>
+     </ul>
+</div>
+<div class="car_controller" style="height: 10%;width: 100%">
+    <div style="background-color: aliceblue;height: 40%" th:if="${car_shuliang}>0">您还可以添加  <span th:text="${car_shuliang}"></span>  块车牌</div>
+    <div style="background-color: aliceblue;height: 40%" th:if="${car_shuliang}<=0">车牌已满，不能再添加</div>
+    <ul th:each="list:${user_car}">
+        <li th:text="${list.car_number}" style="width: auto;height: auto;border: 1px solid black;border-radius: 5px;"></li>
+    </ul>
+    <span th:if="${car_shuliang}>0"><a th:href="@{enter_add_car(phone=${user_Info.phone},password=${user_Info.password},level=${user_Info.level})}">添加车牌</a></span>
+</div>
+<div class="content_no_pay" style="border-bottom: black;height: 30%;width: 100%">
+<div style="background-color:aliceblue">
+    未支付的订单/未离场
+</div>
+    <div align="center">
+        <table>
+            <tr>
+                <td>单号</td>
+                <td>车牌</td>
+                <td>进场时间</td>
+                <td>离场时间</td>
+                <td>需缴费金额(元)</td>
+                <td>缴费状态</td>
+                <td>缴费类型</td>
+            </tr>
+            <tr th:each="list:${car_list}" th:if="${list.pay_flag} == 0">
+                <td th:text="${list.id}"></td>
+                <td th:text="${list.car_number}"></td>
+                <td th:text="${list.enter_time}"></td>
+                <td th:if="${list.leave_time}!=null" th:text="${list.leave_time}"></td>
+                <td th:if="${list.leave_time}==null" th:text="未离场"></td>
+                <td th:text="${list.pay_money}"></td>
+                <td><a th:href="@{to_pay(phone=${user_Info.phone},car_number=${list.car_number},pay_money=${list.pay_money},id=${list.id},password=${user_Info.password},pay_flag=${list.pay_flag})}">去缴费</a></td>
+                <td th:text="暂无"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="content_pay">
+<div style="background-color:aliceblue">
+    支付订单
+</div>
+<div align="center">
+    <table>
+        <tr>
+            <td>单号</td>
+            <td>车牌</td>
+            <td>进场时间</td>
+            <td>离场时间</td>
+            <td>缴费时间</td>
+            <td>缴费金额(元)</td>
+            <td>缴费状态</td>
+            <td>缴费类型</td>
+            <td>缴费号码</td>
+        </tr>
+        <tr th:each="list:${car_fenye_list}" th:if="${list.pay_flag} != 0">
+            <td th:text="${list.id}"></td>
+            <td th:text="${list.car_number}"></td>
+            <td th:text="${list.enter_time}"></td>
+            <td th:if="${list.leave_time}!=null" th:text="${list.leave_time}"></td>
+            <td th:if="${list.leave_time}==null" th:text="未离场"></td>
+            <td th:text="${list.pay_time}"></td>
+            <td th:text="${list.pay_money}"></td>
+            <td th:text="已缴费"></td>
+            <td th:if="${list.pay_flag}==1">自付</td>
+            <td th:if="${list.pay_flag}==2">代付</td>
+            <td th:if="${list.pay_flag}==3"><a th:href="@{to_pay(phone=${user_Info.phone},car_number=${list.car_number},pay_money=${list.over_money},id=${list.id},password=${user_Info.password},pay_flag=${list.pay_flag})}">离场超时，请缴额外费用</a></td>
+            <td th:text="${list.pay_phone}"></td>
+        </tr>
+    </table>
+    <div th:if="${current_page}>1" align="center"><a th:href="@{user_check_login(current_page=${current_page - 1},phone=${user_Info.phone},password=${user_Info.password})}">上一页</a></div>
+    <div align="center" th:if="${car_fenye_list} != null"><a th:href="@{user_check_login(current_page=${current_page + 1},phone=${user_Info.phone},password=${user_Info.password})}">下一页</a></div>
+</div>
+
+</div>
+</body>
+</html>

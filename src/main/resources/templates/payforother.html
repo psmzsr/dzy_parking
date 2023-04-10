@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="pay_other_to_pay" method="post">
+    <table align="center">
+        <tr>
+            <td>当前缴费手机号</td>
+            <td><input readonly name="phone" th:value="${phone}">
+                <input readonly hidden name="password" th:value="${password}"></td>
+        </tr>
+        <tr>
+            <td>请输入缴费的车牌</td>
+            <td><input name="car_number"></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <button>确认</button>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
